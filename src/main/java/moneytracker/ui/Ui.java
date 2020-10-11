@@ -1,5 +1,8 @@
 package moneytracker.ui;
 
+import moneytracker.transaction.ExpenseCategoryList;
+import moneytracker.transaction.IncomeCategoryList;
+import moneytracker.exception.MoneyTrackerException;
 import moneytracker.transaction.Expense;
 import moneytracker.transaction.Income;
 import moneytracker.transaction.Transaction;
@@ -38,14 +41,40 @@ public class Ui {
         printLine();
     }
 
-    public void printAddedTransaction(TransactionList transactions) {
-        System.out.println("Got it! I have added this transaction:");
+    public void printAddedTransaction(TransactionList transactions) throws MoneyTrackerException {
+        Transaction transactionToPrint = transactions.getTransaction(transactions.getSize() - 1);
+        if (transactionToPrint instanceof Income) {
+            System.out.println("Got it! I have added this income:");
+        } else if (transactionToPrint instanceof Expense) {
+            System.out.println("Got it! I have added this expense:");
+        } else {
+            throw new MoneyTrackerException("The transaction type is invalid");
+        }
         printIndentation();
-        System.out.println(transactions.getTransaction(transactions.getSize() - 1).toString());
+        System.out.println(transactionToPrint.toString());
         printIndentation();
         System.out.println("Now you have " + transactions.getSize() + " transactions in your list.");
         printLine();
     }
+
+    public void printAddedExpenseCategory(ExpenseCategoryList expenseCategories) {
+        System.out.println("Got it! I’ve added this expense category:");
+        printIndentation();
+        System.out.println(expenseCategories.getExpenseCategory(expenseCategories.getSize() - 1).toString());
+        printIndentation();
+        System.out.println("Now you have " + expenseCategories.getSize() + " expense categories in your list.");
+        printLine();
+    }
+
+    public void printAddedIncomeCategory(IncomeCategoryList incomeCategories) {
+        System.out.println("Got it! I’ve added this income category:");
+        printIndentation();
+        System.out.println(incomeCategories.getIncomeCategory(incomeCategories.getSize() - 1).toString());
+        printIndentation();
+        System.out.println("Now you have " + incomeCategories.getSize() + " income categories in your list.");
+        printLine();
+    }
+
 
     public void printError(String errorMessage) {
         System.out.println("OOPS!! " + errorMessage);
@@ -83,8 +112,8 @@ public class Ui {
         printLine();
     }
 
-    public void printRemovedTransaction(int size, String transactionDescription) {
-        System.out.println("Noted! I've removed this transaction: ");
+    public void printRemovedTransaction(int size, String transactionDescription, String transactionType) {
+        System.out.println("Noted! I've removed this " + transactionType + ": ");
         printIndentation();
         System.out.println(transactionDescription);
         printIndentation();
